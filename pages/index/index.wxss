@@ -38,7 +38,10 @@ page{
 }
 .info .restart
 {
-	flex: 1;
+	/*flex: 1;*/
+	/*background-color: transparent;
+	border-color: transparent;*/
+	border-width: 0;
 }
 
 .info .restart Image
@@ -117,4 +120,37 @@ page{
 	flex-direction: column;
 	text-align: center;
 	justify-content: center;
+}
+
+/* 控制键 */
+.direction
+{
+	display: flex;
+	flex-direction: row;
+	text-align: center;
+	justify-content: center;
+}
+
+.direction .directionBtn
+{
+	color: #fff;
+	display: inline-block;
+	border-width: 1px;
+	border-color: #bbada0;
+	background-color: #cdc1b4;
+}
+
+.direction .directionBtn-hover
+{
+	color: #000;
+	border-color: #cdc1b4;
+	background-color: #bbada0;
+}
+
+/* 提示 */
+.tips
+{
+	font-size: 14px;
+	color: #cdc1b3;
+	margin-top: 20px;
 }

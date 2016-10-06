@@ -6,9 +6,9 @@
 		</View>
 	</View>
 
-	<View class="restart center">
-		<Image src="../../images/restart.png"></Image>
-	</View>
+		<Button class="restart center" bindtap="reset" plain="YES">
+			<Image src="../../images/restart.png"></Image>
+		</Button>
 
 	<View class="best">
 		<View class="bestContent">
@@ -20,10 +20,25 @@
 
 <!-- View.chessboard>View.row*4>View.column*4 -->
 
-<View class="chessboard">
+<View class="chessboard" catchtouchstart="touchstart" catchtouchend="touchend">
 	<View class="row" wx:for="{{chessboardDatas}}" wx:for-index="idx" wx:for-item="chessboardColumn">
 		<View class="column" wx:for="{{chessboardColumn}}" wx:for-item="chessboardRow">{{chessboardRow>0?chessboardRow:''}}</View>
 	</View>
 </View>
 
-<View class="primary-text center">ps: 合并数字得到一个2048！</View>
+<View class="direction">
+	<Button class="directionBtn" bindtap="turnUp" hover-class="directionBtn-hover">
+			上
+	</Button>
+	<Button class="directionBtn" bindtap="turnDown" hover-class="directionBtn-hover">
+		下
+	</Button>
+	<Button class="directionBtn" bindtap="turnLeft" hover-class="directionBtn-hover">
+		左
+	</Button>
+	<Button class="directionBtn" bindtap="turnRight" hover-class="directionBtn-hover">
+		右
+	</Button>
+</View>
+
+<View class="tips center">ps: 合并数字得到一个2048！</View>

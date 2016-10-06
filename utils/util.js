@@ -22,7 +22,26 @@ function getRandomNum(Min,Max){
   return(Min + Math.round(Rand * Range));   
 }
 
+function swapItems(arr, index1, index2) {
+  arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+  return arr;
+};
+
+function scan_array(arr) {
+  var str = '';
+  for(var key in arr) {
+    if(typeof(arr[key]) == 'array' || typeof(arr[key]) == 'object') {// 递归调用
+      scan_array(arr[key]);
+    } else {
+      str = str + ' ' + arr[key];
+    }
+  }
+  console.log(str);
+}
+
 module.exports = {
   formatTime: formatTime,
-  getRandomNum: getRandomNum
+  getRandomNum: getRandomNum,
+  swapItems: swapItems,
+  scan_array: scan_array
 }
