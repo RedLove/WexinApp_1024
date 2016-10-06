@@ -2,7 +2,7 @@
 	<View class="score">
 		<View class="scoreContent">
 			<Text class="item titleItem">SCORE</Text>
-			<Text class="item contentItem" id="current_score">0</Text>
+			<Text class="item contentItem" id="current_score">{{current_score}}</Text>
 		</View>
 	</View>
 
@@ -13,7 +13,7 @@
 	<View class="best">
 		<View class="bestContent">
 			<Text class="item titleItem">BEST</Text>
-			<Text class="item contentItem" id="best_score">0</Text>
+			<Text class="item contentItem" id="best_score">{{best_score}}</Text>
 		</View>
 	</View>
 </View>
@@ -42,3 +42,7 @@
 </View>
 
 <View class="tips center">ps: 合并数字得到一个2048！</View>
+
+<toast hidden="{{toast2Hidden}}" duration="1500" bindchange="reset">
+	您已通关
+</toast>

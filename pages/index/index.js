@@ -7,7 +7,39 @@ Page({
 	      [0,2,0,0],
 	      [2,4,2,0],
 	      [0,0,2,4]
-	   ]  
+	   ],
+	   current_score: 0,
+	   best_score : 0,
+	   toast2Hidden: true,
+	},
+	getCurrentBestScore: function(){
+		var best_score = this.data.best_score;
+		var current_score = this.data.current_score;
+
+		best_score = current_score>best_score?current_score:best_score;
+		return best_score;
+	},
+	judgeSuccess: function(){
+		var chessboardDatas = this.data.chessboardDatas;
+
+		for (var i = 0; i < chessboardDatas.length; i++) {
+			for (var j = 0; j < chessboardDatas[i].length; j++) {
+				if (chessboardDatas[i][j]>=8) {
+					this.recordState();
+					this.setData({
+						toast2Hidden: false
+					});
+					break;
+				}
+			}
+		}
+	},
+	recordState: function(){
+		var best_score = this.getCurrentBestScore();
+		this.setData({
+			best_score: best_score
+		});
+		wx.setStorageSync("uncompleteState",this.data);
 	},
 	reset: function(){
 		var chessDefaultDatas = [
@@ -25,7 +57,9 @@ Page({
 		}
 
 		this.setData({
-			chessboardDatas: chessDefaultDatas
+			chessboardDatas: chessDefaultDatas,
+			current_score: 0,
+			toast2Hidden: true
 		});
 	},
 	getChessboardCellNum: function(array,index){
@@ -68,10 +102,10 @@ Page({
 				if (chessboardDatas[i][j]!=0) {
 					continue;
 				}
-				count++;
 				if (newCellNumIndex == count) {
 					chessboardDatas[i][j] = 2;
 				}
+				count++;
 			}
 		}
 	},
@@ -81,65 +115,95 @@ Page({
 		//   console.log(res.y)
 		//   console.log(res.z)
 		// })
+   		var data = wx.getStorageSync("uncompleteState");
+   		if (!!data) {
+	   		this.setData(data);
+   		}
+
 	},
-	turnEnd: function(chessboardDatas){
+	onUnload: function(){
+		this.recordState();
+	},
+	onHide: function(){
+		this.recordState();
+	},
+	turnEnd: function(chessboardDatas,addScore){
 		this.generateNewCellNum(chessboardDatas);
+
+		var best_score = this.getCurrentBestScore();
         this.setData({
-        	chessboardDatas:chessboardDatas
-      	})
+        	chessboardDatas:chessboardDatas,
+        	current_score: this.data.current_score + addScore,
+			best_score: best_score
+      	});
+
+        this.judgeSuccess();
+
         util.scan_array(this.data.chessboardDatas);
 	},
-	// FIXME: 不在一起的时候不会合并
 	turnUp: function(){
 		var chessboardDatas = this.data.chessboardDatas;
+		var addScore = 0;
+        this.reorder_up(chessboardDatas); 
 		for (var i = 0; i < chessboardDatas.length-1; i++) {
 			for (var j = 0; j < chessboardDatas[i].length; j++) {
 				if(chessboardDatas[i][j] == chessboardDatas[i+1][j]){
+					addScore += chessboardDatas[i][j];
 					chessboardDatas[i][j]=chessboardDatas[i][j]+chessboardDatas[i+1][j];  
 	                chessboardDatas[i+1][j]=0;  
-	                this.reorder_up(chessboardDatas); 
 				}
 			}
 		}
-		this.turnEnd(chessboardDatas);
+        this.reorder_up(chessboardDatas); 
+		this.turnEnd(chessboardDatas,addScore);
 	},
 	turnDown: function(){
 		var chessboardDatas = this.data.chessboardDatas;
+		var addScore = 0;
+		this.reorder_down(chessboardDatas); 
 		for (var i = chessboardDatas.length-1; i >= 1; i--) {
 			for (var j = chessboardDatas[i].length-1 ; j >= 0; j--) {
 				if(chessboardDatas[i][j] == chessboardDatas[i-1][j]){
+					addScore += chessboardDatas[i][j];
 					chessboardDatas[i][j]=chessboardDatas[i][j]+chessboardDatas[i-1][j];  
 	                chessboardDatas[i-1][j]=0;  
-	                this.reorder_down(chessboardDatas); 
 				}
 			}
 		}
-		this.turnEnd(chessboardDatas);
+		this.reorder_down(chessboardDatas); 
+		this.turnEnd(chessboardDatas,addScore);
 	},
-	turnLeft: function(){var chessboardDatas = this.data.chessboardDatas;
+	turnLeft: function(){
+		var chessboardDatas = this.data.chessboardDatas;
+		var addScore = 0;
+        this.reorder_left(chessboardDatas); 
 		for (var j = 0; j < chessboardDatas.length - 1; j++) {
 			for (var i = 0; i < chessboardDatas.length ; i++) {
 				if(chessboardDatas[i][j] == chessboardDatas[i][j+1]){
+					addScore += chessboardDatas[i][j];
 					chessboardDatas[i][j]=chessboardDatas[i][j]+chessboardDatas[i][j+1];  
 	                chessboardDatas[i][j+1]=0;  
-	                this.reorder_left(chessboardDatas); 
 				}
 			}
 		}
-		this.turnEnd(chessboardDatas);
+        this.reorder_left(chessboardDatas); 
+		this.turnEnd(chessboardDatas,addScore);
 	},
 	turnRight: function(){
+		var addScore = 0;
 		var chessboardDatas = this.data.chessboardDatas;
+		this.reorder_right(chessboardDatas); 
 		for (var j = chessboardDatas.length-1 ; j >= 0; j--) {
 			for (var i = chessboardDatas.length-1; i >= 1; i--) {
 				if(chessboardDatas[i][j] == chessboardDatas[i][j-1]){
+					addScore += chessboardDatas[i][j];
 					chessboardDatas[i][j]=chessboardDatas[i][j]+chessboardDatas[i][j-1];  
 	                chessboardDatas[i][j-1]=0;  
-	                this.reorder_right(chessboardDatas); 
 				}
 			}
 		}
-		this.turnEnd(chessboardDatas);
+		this.reorder_right(chessboardDatas); 
+		this.turnEnd(chessboardDatas,addScore);
 	},
 	reorder_up: function(chessboardDatas){
 		for (var i = 0; i < chessboardDatas.length; i++) {
