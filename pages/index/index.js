@@ -24,7 +24,7 @@ Page({
 
 		for (var i = 0; i < chessboardDatas.length; i++) {
 			for (var j = 0; j < chessboardDatas[i].length; j++) {
-				if (chessboardDatas[i][j]>=8) {
+				if (chessboardDatas[i][j]>=2048) {
 					this.recordState();
 					this.setData({
 						toast2Hidden: false
