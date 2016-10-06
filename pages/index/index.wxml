@@ -1,0 +1,29 @@
+<View class="info">
+	<View class="score">
+		<View class="scoreContent">
+			<Text class="item titleItem">SCORE</Text>
+			<Text class="item contentItem" id="current_score">0</Text>
+		</View>
+	</View>
+
+	<View class="restart center">
+		<Image src="../../images/restart.png"></Image>
+	</View>
+
+	<View class="best">
+		<View class="bestContent">
+			<Text class="item titleItem">BEST</Text>
+			<Text class="item contentItem" id="best_score">0</Text>
+		</View>
+	</View>
+</View>
+
+<!-- View.chessboard>View.row*4>View.column*4 -->
+
+<View class="chessboard">
+	<View class="row" wx:for="{{chessboardDatas}}" wx:for-index="idx" wx:for-item="chessboardColumn">
+		<View class="column" wx:for="{{chessboardColumn}}" wx:for-item="chessboardRow">{{chessboardRow>0?chessboardRow:''}}</View>
+	</View>
+</View>
+
+<View class="primary-text center">ps: 合并数字得到一个2048！</View>
